@@ -632,9 +632,8 @@ def descargar_archivo(filename):
 # ============================================
 # INICIAR
 # ============================================
-cargar_y_entrenar_modelo()
-
 if __name__ == '__main__':
+    cargar_y_entrenar_modelo()
     # El puerto 5000 es el predeterminado local, pero en la nube se usa la variable de entorno PORT
     port = int(os.environ.get("PORT", 5000)) 
     print("\n" + "="*50)
