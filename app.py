@@ -22,9 +22,9 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # CONFIGURACIÓN DE SUPABASE
 # ============================================
 try:
-    # Intentar obtener de variables de entorno (Configuración segura en Render/Koyeb)
-    SUPABASE_URL = os.environ.get("https://twhkixjwrmpiikgejrut.supabase.co")
-    SUPABASE_KEY = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3aGtpeGp3cm1waWlrZ2VqcnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0Mjg4NzEsImV4cCI6MjA5NjAwNDg3MX0.QbYGDS5J2xPcRtphGwMLoG3ATvUCQixYB2LqKtnsxd0")
+    # Intentar obtener de variables de entorno (Configuración correcta para el servidor)
+    SUPABASE_URL = os.environ.get("SUPABASE_URL")
+    SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
     
     # Si no están en el entorno, usar las de respaldo (solo para desarrollo local)
     if not SUPABASE_URL: SUPABASE_URL = "https://twhkixjwrmpiikgejrut.supabase.co"
