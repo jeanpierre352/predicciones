@@ -23,12 +23,12 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # ============================================
 try:
     # Intentar obtener de variables de entorno (Configuración segura en Render/Koyeb)
-    SUPABASE_URL = os.environ.get("SUPABASE_URL")
-    SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+    SUPABASE_URL = os.environ.get("https://twhkixjwrmpiikgejrut.supabase.co")
+    SUPABASE_KEY = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3aGtpeGp3cm1waWlrZ2VqcnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0Mjg4NzEsImV4cCI6MjA5NjAwNDg3MX0.QbYGDS5J2xPcRtphGwMLoG3ATvUCQixYB2LqKtnsxd0")
     
     # Si no están en el entorno, usar las de respaldo (solo para desarrollo local)
     if not SUPABASE_URL: SUPABASE_URL = "https://twhkixjwrmpiikgejrut.supabase.co"
-    if not SUPABASE_KEY: SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    if not SUPABASE_KEY: SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3aGtpeGp3cm1waWlrZ2VqcnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0Mjg4NzEsImV4cCI6MjA5NjAwNDg3MX0.QbYGDS5J2xPcRtphGwMLoG3ATvUCQixYB2LqKtnsxd0"
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     # Probar la conexión solicitando un dato simple
