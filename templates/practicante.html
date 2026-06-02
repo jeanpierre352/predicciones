@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Practicante - Sistema Tareas</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/000000/task.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        h2 { color: #667eea; margin: 20px 0 15px 0; }
+        h3 { color: #333; margin-bottom: 15px; }
+        .bienvenido { color: #666; margin-bottom: 20px; font-size: 1.1em; }
+        .tarea-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .tarea-card-pendiente {
+            border-left-color: #ffc107;
+        }
+        .estadisticas {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 10px;
+            flex: 1;
+        }
+        .stat-number { font-size: 28px; font-weight: bold; color: #667eea; }
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        button.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        button.warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .sin-tarea { text-align: center; color: #dc3545; font-size: 18px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #16213e; /* Darker header for tables */
+            color: white;
+        }
+        .scroll-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .historial-titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .historial-total {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .info-horario {
+            background: #f0f2f5; /* Light grey for info boxes */
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1000px; /* Match container width */
+        }
+        .btn-home {
+            background: #f0f2f5; /* Light background for home button */
+            border: none;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .btn-home:hover {
+            background: #e0e0e0;
+            color: #1a1a2e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-top">
+            <a href="/logout" class="btn-home">🏠 Ir al Inicio</a>
+        </div>
+        <div class="card">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <img src="https://img.icons8.com/clouds/100/000000/task.png" alt="Logo" style="width: 70px; height: 70px; margin-right: 15px;">
+                <h1>Panel del Practicante</h1>
+            </div>
+            <div class="bienvenido">Bienvenido, <strong>{{ practicante.nombre }}</strong></div>
+            
+            <!-- Estadísticas personales -->
+            <div class="estadisticas">
+                <div class="stat">
+                    <div class="stat-number">{{ estadisticas.tareas_completadas }}</div>
+                    <div>Tareas Completadas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">{{ estadisticas.tiempo_promedio }}</div>
+                    <div>Tiempo Promedio (horas)</div>
+                </div>
+            </div>
+            
+            <!-- Tarea actual -->
+            {% if tarea %}
+            <div class="tarea-card {% if not tarea_aceptada %}tarea-card-pendiente{% endif %}">
+                <h3>📋 Tu tarea actual</h3>
+                <p><strong>Tarea:</strong> {{ tarea.nombre }}</p>
+                <p><strong>Tipo:</strong> {{ tarea.tipo_tarea }}</p>
+                <p><strong>Tecnología:</strong> {{ tarea.tecnologia }}</p>
+                <p><strong>Dificultad:</strong> {{ tarea.dificultad }} / 5</p>
+                <p><strong>Urgencia:</strong> {{ tarea.urgencia }} / 5</p>
+                <p><strong>Tareas paralelas:</strong> {{ tarea.tareas_paralelas }}</p>
+                <p><strong>Conocimiento previo:</strong> {{ tarea.conocimiento_previo }} / 5</p>
+                <p><strong>Tiempo estimado:</strong> {{ tarea.tiempo_predicho }} horas</p>
+                
+                {% if tarea.archivo %}
+                <p style="margin-top: 10px;">
+                    <strong>📄 Archivo adjunto:</strong> 
+                    <a href="/descargar/{{ tarea.archivo }}" target="_blank" style="color: #667eea; font-weight: bold;">Descargar documento</a>
+                </p>
+                {% endif %}
+                
+                {% if fecha_inicio %}
+                <p><strong>🕐 Iniciada:</strong> {{ fecha_inicio }}</p>
+                {% endif %}
+                
+                {% if not tarea_aceptada %}
+                <form method="POST" action="/aceptar_tarea">
+                    <button type="submit" class="warning">✅ Aceptar Tarea</button>
+                </form>
+                {% else %}
+                <form method="POST" action="/completar_tarea_practicante">
+                    <button type="submit" class="success">🏁 Completar Tarea</button>
+                </form>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="sin-tarea">
+                <p>📭 No tienes tareas asignadas actualmente.</p>
+                <form method="POST" action="/actualizar_tarea_practicante">
+                    <button type="submit">🔄 Solicitar Nueva Tarea</button>
+                </form>
+            </div>
+            {% endif %}
+            
+            <div class="info-horario">
+                ⏰ Horario laboral: Lunes a Viernes, 10:00 AM - 5:00 PM<br>
+                El tiempo se calcula automáticamente dentro del horario laboral.
+            </div>
+        </div>
+
+        <!-- Tareas Completadas Recientemente (Sistema Actual) -->
+        {% if tareas_recientes and tareas_recientes|length > 0 %}
+        <div class="card">
+            <div class="historial-titulo">
+                <h2 style="color: #28a745;">✨ Tareas Recientes (Sistema Actual)</h2>
+                <div class="historial-total" style="background: #28a745;">{{ tareas_recientes|length }} tareas</div>
+            </div>
+            <div class="scroll-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tarea</th>
+                            <th>Tipo</th>
+                            <th>Tecnología</th>
+                            <th>Dificultad</th>
+                            <th>Tiempo Real</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t_rec in tareas_recientes %}
+                        <tr>
+                            <td>{{ t_rec.nombre }}</td>
+                            <td>{{ t_rec.tipo_tarea }}</td>
+                            <td>{{ t_rec.tecnologia }}</td>
+                            <td>{{ t_rec.dificultad }} / 5</td>
+                            <td><strong>{{ t_rec.tiempo_fmt }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Historial Histórico (Cargado de Archivo) -->
+        {% if historial_antiguo and historial_antiguo|length > 0 %}
+        <div class="card">
+            <div class="historial-titulo">
+                <h2 style="color: #6c757d;">📜 Historial Histórico (Archivo)</h2>
+                <div class="historial-total" style="background: #6c757d;">{{ historial_antiguo|length }} tareas</div>
+            </div>
+            <div class="scroll-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Tecnología</th>
+                            <th>Dificultad</th>
+                            <th>Tiempo (horas)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarea_hist in historial_antiguo %}
+                        <tr>
+                            <td>{{ tarea_hist['Tipo Tarea'] }}</td>
+                            <td>{{ tarea_hist['Tecnología'] }}</td>
+                            <td>{{ tarea_hist['Dificultad'] }}</td>
+                            <td>{{ tarea_hist['Tiempo (horas)'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

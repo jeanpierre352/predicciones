@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$*.py
+.venv/
+venv/
+ENV/
+.env
+
+# Archivos antiguos de datos locales
+*.csv
+
+# Archivos subidos por practicantes (opcional, si no quieres compartirlos en GitHub)
+static/uploads/*

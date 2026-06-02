@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistema Tareas</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/000000/task.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .btn-admin, .btn-practicante {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .btn-admin:hover, .btn-practicante:hover {
+            transform: scale(1.02);
+        }
+        .btn-admin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-practicante {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://img.icons8.com/clouds/100/000000/task.png" alt="Logo" style="width: 100px; height: 100px; margin-bottom: 10px;">
+        <h1>Sistema de Tareas</h1>
+        <p class="subtitle">Gestión Inteligente de Proyectos</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <a href="/login_admin" class="btn-admin">👑 Acceso Administrador</a>
+            <a href="/login_practicante" class="btn-practicante">👨‍💻 Acceso Practicantes</a>
+        </div>
+        
+        <p style="margin-top: 20px; font-size: 10px; color: #ccc;">Powered by Random Forest Regressor</p>
+    </div>
+</body>
+</html>

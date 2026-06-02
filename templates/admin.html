@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - Sistema Tareas</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/000000/task.png">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+      .container {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        border-top: 4px solid #667eea;
+      }
+      .card h2 {
+        margin-bottom: 15px;
+        color: #16213e;
+        font-size: 1.4em;
+      }
+      .form-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      input,
+      select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+      button {
+        padding: 12px 25px;
+        background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: transform 0.2s;
+      }
+      button:hover {
+        transform: scale(1.02);
+      }
+      button.danger {
+        background: #dc3545;
+      }
+      button.success {
+        background: #28a745;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background: #16213e;
+        color: white;
+        white-space: nowrap;
+      }
+      .table-responsive {
+        overflow-x: auto;
+        width: 100%;
+      }
+      .top10-card {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 15px;
+        margin-top: 15px;
+      }
+      .top10-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .top10-list {
+        margin-left: 20px;
+      }
+      .acciones {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .header-admin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        width: 100%;
+        max-width: 1200px; /* Match container width */
+      }
+      .header-admin h1 {
+          color: white;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      }
+      .btn-logout {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+      .btn-logout:hover {
+        background: white;
+        color: #16213e;
+      }
+
+      /* Estilos para el Modal (Overlay superpuesto) */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      }
+      .btn-close-modal {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-admin">
+        <div style="display: flex; align-items: center;">
+          <img src="https://img.icons8.com/clouds/100/000000/task.png" alt="Logo" style="width: 70px; height: 70px; margin-right: 10px;">
+          <h1>Panel de Administrador</h1>
+        </div>
+        <a href="/logout" class="btn-logout">🏠 Ir al Inicio</a>
+      </div>
+
+      <!-- Formulario subir tarea (UNO SOLO) -->
+      <div class="card">
+        <h2>📝 Subir Nueva Tarea</h2>
+        <form method="POST" action="/subir_tarea" enctype="multipart/form-data">
+          <div class="form-group">
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre de la tarea"
+              required
+              style="width: 100%"
+            />
+          </div>
+          <div class="form-row">
+            <select name="tipo_tarea" required>
+              <option value="">-- Tipo Tarea --</option>
+              <option value="web_page">Web Page</option>
+              <option value="login_auth">Login/Auth</option>
+              <option value="api_rest">API REST</option>
+              <option value="formulario">Formulario</option>
+              <option value="dashboard">Dashboard</option>
+              <option value="bd_datos">Base Datos</option>
+              <option value="test_unitario">Test Unitario</option>
+              <option value="componente_react">Componente React</option>
+              <option value="funcion_js">Función JS</option>
+              <option value="documentacion">Documentación</option>
+              <option value="deployment">Deployment</option>
+              <option value="microservicio">Microservicio</option>
+            </select>
+            <select name="tecnologia" required>
+              <option value="">-- Tecnología --</option>
+              <option value="python">Python</option>
+              <option value="javascript">JavaScript</option>
+              <option value="nodejs">NodeJS</option>
+              <option value="react">React</option>
+              <option value="vue">Vue</option>
+              <option value="angular">Angular</option>
+              <option value="flask">Flask</option>
+              <option value="django">Django</option>
+              <option value="sql">SQL</option>
+              <option value="mongodb">MongoDB</option>
+              <option value="css">CSS</option>
+              <option value="html">HTML</option>
+              <option value="bootstrap">Bootstrap</option>
+              <option value="tailwind">Tailwind</option>
+              <option value="jquery">jQuery</option>
+              <option value="express">Express</option>
+              <option value="php">PHP</option>
+            </select>
+            <input
+              type="number"
+              name="dificultad"
+              placeholder="Dificultad (1-5)"
+              step="1"
+              min="1"
+              max="5"
+              required
+              style="width: 130px"
+            />
+            <input
+              type="number"
+              name="urgencia"
+              placeholder="Urgencia (1-5)"
+              step="1"
+              min="1"
+              max="5"
+              required
+              style="width: 130px"
+            />
+            <input
+              type="number"
+              name="tareas_paralelas"
+              placeholder="Tareas paralelas (0-5)"
+              step="1"
+              min="0"
+              max="5"
+              required
+              style="width: 150px"
+            />
+            <input
+              type="number"
+              name="conocimiento_previo"
+              placeholder="Conocimiento previo (1-5)"
+              step="1"
+              min="1"
+              max="5"
+              required
+              style="width: 170px"
+            />
+          </div>
+          <div class="form-group" style="margin-top: 15px">
+            <label style="display: block; margin-bottom: 5px; color: #666;">Adjuntar documento (Word, PDF):</label>
+            <input 
+              type="file" 
+              name="archivo" 
+              accept=".doc,.docx,.pdf,.txt"
+            />
+          </div>
+          <div class="form-row" style="margin-top: 15px">
+            <button type="submit">➕ Subir Tarea</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mostrar Top 10 si existe -->
+      {% if session.resultados_top10 %}
+      <div class="modal-overlay">
+        <div class="modal-content">
+          <a href="/cerrar_top10" class="btn-close-modal" title="Cerrar">&times;</a>
+          <h2 style="margin-bottom: 20px; color: #16213e;">🏆 Sugerencia de Asignación</h2>
+          {% for tarea in session.resultados_top10 %}
+          <div class="top10-card">
+            <div class="top10-title">📌 Tarea: {{ tarea.tarea_nombre }}</div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Mejores candidatos encontrados:</p>
+            <ol class="top10-list">
+              {% for p in tarea.top10 %}
+              <li>
+                <strong>{{ p.practicante }}</strong> - {{ p.tiempo_predicho }} horas
+              </li>
+              {% endfor %}
+            </ol>
+            <form
+              method="POST"
+              action="/asignar_tarea_automatica"
+              style="margin-top: 20px"
+            >
+              <input type="hidden" name="tarea_id" value="{{ tarea.tarea_id }}" />
+              <button type="submit" class="success" style="width: 100%">
+                🎯 Confirmar y Asignar a {{ tarea.top10[0].practicante }}
+              </button>
+            </form>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Lista de tareas -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h2>📋 Lista de Tareas</h2>
+          <button class="danger" style="padding: 8px 15px; font-size: 13px;" onclick="confirmarReset()">🔄 Reiniciar Todo</button>
+        </div>
+        <script>
+          function confirmarReset() {
+              if (confirm("¿Estás seguro de reiniciar todas las asignaciones actuales? Esto no borrará las tareas completadas.")) {
+                  window.location.href = "/reset_sistema";
+              }
+          }
+        </script>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Tecnología</th>
+                <th>Dificultad</th>
+                <th>Responsable</th>
+                <th>Estado</th>
+                <th>Asignación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tarea in tareas %}
+              <tr>
+                <td><code style="background: #eee; padding: 3px 6px; border-radius: 5px; font-size: 0.85em; color: #555;">#{{ (tarea.id|string)[-6:] }}</code></td>
+                <td>{{ tarea.nombre }}</td>
+                <td>{{ tarea.tipo_tarea }}</td>
+                <td>{{ tarea.tecnologia }}</td>
+                <td>{{ tarea.dificultad }} / 5</td>
+                <td><strong>{{ tarea.asignado_a }}</strong></td>
+                <td>
+                  {% if tarea.estado == 'pendiente' %}🟡 Pendiente
+                  {% elif tarea.estado == 'asignada' %}🔵 Asignada
+                  {% else %}
+                    ✅ Completada <br>
+                    <small style="color: #28a745;">({{ tarea.tiempo_fmt }})</small>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if tarea.estado == 'pendiente' %}
+                  <form method="POST" action="/predecir_y_mostrar_top10">
+                    <input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+                    <button type="submit" style="padding: 5px 10px; font-size: 12px; background: #667eea;">🔍 Sugerir</button>
+                  </form>
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="/eliminar_tarea/{{ tarea.id }}"
+                    ><button class="danger" title="Eliminar tarea">🗑️</button></a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

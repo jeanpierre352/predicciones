@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login - Sistema Tareas</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/000000/task.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .login-container {
+            background: white; border-radius: 20px; padding: 40px; width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; color: #666; font-size: 14px; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+        button {
+            width: 100%; padding: 15px; border: none; border-radius: 10px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;
+        }
+        .error-msg { color: #d9534f; background: #f9ebeb; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        .back-link { display: block; margin-top: 20px; color: #667eea; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://img.icons8.com/clouds/100/000000/task.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 10px;">
+        <h1>Admin Access</h1>
+        <p class="subtitle">Gestión de Control</p>
+        
+        {% if error %}
+        <div class="error-msg">⚠️ {{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/login">
+            <input type="hidden" name="rol" value="admin">
+            <div class="input-group">
+                <label>Contraseña Maestra:</label>
+                <input type="password" name="password" placeholder="Ingresa clave" required autofocus>
+            </div>
+            <button type="submit">Entrar al Panel</button>
+        </form>
+        <a href="/" class="back-link">⬅ Volver al inicio</a>
+    </div>
+</body>
+</html>
